@@ -1,0 +1,341 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: url('imagenes/estrellas.png') center center / cover no-repeat;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #E0E0E0;
+}
+canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+/* -------------------------------------- */
+/* GUI personalizado (Panel Izquierdo) */
+/* -------------------------------------- */
+.custom-gui {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    background: rgba(30, 30, 30, 0.9);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+
+.custom-gui h2 {
+    color: #FFF;
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    position: relative;
+}
+
+
+.param-group {
+    margin-bottom: 20px;
+    overflow: auto;
+}
+
+
+.param-group label {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+    color: #C0C0C0;
+}
+
+
+/* Estilo del Slider (la pista) */
+.param-group input[type="range"] {
+    width: calc(100% - 70px);
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: linear-gradient(to right, #DAA520, #FFD700);
+    border-radius: 5px;
+    outline: none;
+    transition: opacity .2s;
+    float: left;
+}
+
+
+/* Estilo del Thumb (el círculo/manija del slider) */
+.param-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FFF;
+    cursor: pointer;
+    border: 3px solid #DAA520;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+
+.param-group input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FFF;
+    cursor: pointer;
+    border: 3px solid #DAA520;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+
+.param-group span {
+    font-size: 0.85em;
+    color: #FFD700;
+    width: 60px;
+    text-align: right;
+    float: right;
+    line-height: 20px;
+}
+
+
+.custom-gui #startBtn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1.1em;
+    background: linear-gradient(to right, #DAA520, #FFD700);
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+.custom-gui #startBtn:hover {
+    background: linear-gradient(to right, #FFD700, #DAA520);
+    transform: translateY(-2px);
+}
+
+
+/* -------------------------------------- */
+/* Panel de Resultados (Panel Derecho) */
+/* -------------------------------------- */
+.impact-results-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 350px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: rgba(30, 30, 30, 0.9);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    color: #E0E0E0;
+}
+
+
+.impact-results-panel .panel-header {
+    color: #FFF;
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    position: relative;
+}
+
+
+.impact-results-panel .panel-content p {
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.impact-results-panel .panel-content strong {
+    color: #FFD700;
+    font-weight: normal;
+    text-align: right;
+    flex-grow: 1;
+}
+
+
+.impact-results-panel .panel-content hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 15px 0;
+}
+
+
+/* Estilos para la sección de sugerencias (inyectada por JS) */
+.impact-results-panel .panel-content #res-sugerencias h3 {
+    color: #0a74da;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+
+.impact-results-panel .panel-content #res-sugerencias ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+
+.impact-results-panel .panel-content #res-sugerencias ul li {
+    background: rgba(50, 50, 50, 0.7);
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border-left: 4px solid #0a74da;
+    font-size: 0.9em;
+}
+
+
+/* -------------------------------------- */
+/* Mensaje de Estado (Simulación Terminada) */
+/* -------------------------------------- */
+.status-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    padding: 20px 40px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #FFD700;
+    font-size: 2.5em;
+    font-weight: bold;
+    border: 3px solid #DAA520;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    text-align: center;
+    /* La lógica de display se maneja en JS */
+}
+
+
+/* -------------------------------------- */
+/* Controles Direccionales (Panel Inferior) */
+/* -------------------------------------- */
+.controls {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: grid;
+    grid-template-columns: 60px 60px 60px;
+    grid-template-rows: 60px 60px 60px;
+    gap: 10px;
+    z-index: 5;
+}
+.btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background: rgba(34,34,34,0.9);
+    color: white;
+    font-size: 20px;
+    border: 2px solid rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+
+/* Clase de utilidad (solo úsala si es estrictamente necesario en otras partes del HTML) */
+.hidden {
+    display: none !important;
+}
+
+.language-switcher {
+    position: absolute;
+    top: 20px;
+    right: 400px; /* lo muevo un poco para no tapar el panel de resultados */
+    background: rgba(30, 30, 30, 0.9);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    color: #E0E0E0;
+    z-index: 15;
+}
+
+
+.language-switcher select {
+    background: #222;
+    color: #FFD700;
+    border: 1px solid #555;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* --- Estilos para los Nuevos Elementos --- */
+
+.custom-gui .data-group {
+    margin-bottom: 15px;
+}
+
+.custom-gui .data-group label {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+    color: #C0C0C0;
+}
+
+.custom-gui .data-group select {
+    width: 100%;
+    padding: 8px;
+    background: #333;
+    color: #FFD700;
+    border: 1px solid #555;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.custom-gui .divider {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 20px 0;
+}
+
+/* Botón secundario para la desviación */
+.custom-gui .secondary-btn {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 1em;
+    background: #444;
+    color: #E0E0E0;
+    border: 1px solid #666;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.custom-gui .secondary-btn:hover {
+    background: #555;
+    transform: translateY(-1px);
+}
+
+.custom-gui .secondary-btn.active {
+    background: #0a74da;
+    color: white;
+    border-color: #0a74da;
+}
+

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación Impacto Meteoritos</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS PRINCIPAL: Estilo Soft Dark / Cálido */
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #0d1117; /* Fondo muy oscuro */
+            font-family: 'Inter', sans-serif; 
+            color: #dcdcdc; /* Color de texto gris claro y suave */
+
+            /* >>> CÓDIGO AÑADIDO PARA EL FONDO DE ESTRELLAS <<< */
+            background-image: url('imagenes/estrellas.png'); /* Ruta a tu imagen */
+            background-size: cover; /* Asegura que cubra toda la pantalla */
+            background-attachment: fixed; /* Mantiene el fondo fijo al desplazarse */
+        }
+        canvas { 
+            display: block; 
+        }
+
+        /* Estilo Base de los Paneles: Cálido y Suave */
+        .custom-gui, .impact-results-panel {
+            position: absolute;
+            /* Fondo de color gris carbón cálido (Lo haré semi-transparente para que se vea un poco el fondo) */
+            background-color: rgba(31, 36, 39, 0.95); /* 95% opaco */
+            padding: 30px; 
+            border-radius: 18px; /* Bordes más redondeados */
+            
+            /* Sombra de profundidad (sin borde fuerte) */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); 
+
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* ======================================= */
+        /* 1. Panel de Control (Izquierda) */
+        /* ======================================= */
+        .custom-gui {
+            top: 30px; /* Más ordenado al bajarlo */
+            left: 30px;
+            width: 320px;
+        }
+        
+        /* Título "Ajusta los parámetros" */
+        .custom-gui h2 {
+            margin-top: 0;
+            color: #f0f0f0; 
+            border-bottom: 2px solid #5a6268; /* Línea divisoria gris suave */
+            padding-bottom: 15px;
+            margin-bottom: 35px;
+            font-size: 1.7em;
+            font-weight: 700; 
+        }
+        
+        .control-group {
+            margin-bottom: 30px; /* Más espacio entre controles */
+        }
+        .control-group label {
+            color: #a0a0a0; 
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        /* Valores de los Sliders a color NARANJA QUEMADO/COBRE */
+        .control-group span {
+            color: #e88d10; 
+            font-weight: 700;
+            font-family: 'Roboto Mono', monospace; 
+        }
+        
+        /* Selector de Asteroide */
+        #asteroid-select {
+            border: 1px solid #3e445b; 
+            background-color: #2b3238;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        /* Sliders de color naranja */
+        input[type="range"] {
+            background: #3e445b;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            background: #e88d10; 
+            box-shadow: 0 0 8px rgba(232, 141, 16, 0.7);
+        }
+
+        /* Botón de Simular Impacto (Naranja Quemado) */
+        #startBtn {
+            width: 100%;
+            padding: 22px; 
+            font-size: 1.6em; 
+            background: linear-gradient(to bottom, #ff9900, #e88d10);
+            color: #1f2427; 
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            box-shadow: 0 6px 15px rgba(232, 141, 16, 0.5); 
+            transition: all 0.2s;
+        }
+        #startBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(232, 141, 16, 0.7);
+        }
+
+        /* Botón de Desviación (Gris Oscuro) */
+        #deflectBtn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            background-color: #3e445b; 
+            color: #dcdcdc;
+            border: none;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        #deflectBtn:hover {
+            background-color: #51586e;
+        }
+        #deflectBtn.active {
+            background-color: #d10000; 
+            box-shadow: 0 0 12px rgba(209, 0, 0, 0.9);
+        }
+
+        /* ======================================= */
+        /* 2. Panel de Resultados (Derecha) */
+        /* ======================================= */
+        .impact-results-panel {
+            top: 30px;
+            right: 30px;
+            width: 350px;
+        }
+        
+        /* Título "Resultados del Impacto" */
+        .impact-results-panel .panel-header {
+            color: #e88d10; /* Naranja quemado para el título */
+            border-bottom: 2px solid #e88d10;
+            font-size: 1.7em;
+            padding-bottom: 15px;
+            margin-bottom: 35px;
+            font-weight: 700;
+        }
+        
+        /* Etiquetas de resultados */
+        .result-item {
+            color: #a0a0a0; 
+            margin-bottom: 18px; /* Más espaciado vertical */
+            font-size: 0.95em;
+        }
+        /* Valores calculados en BLANCO PURO (Alto Contraste) */
+        .result-item strong {
+            color: #ffffff; 
+            font-weight: 500;
+            font-family: 'Roboto Mono', monospace; 
+            font-size: 1em;
+        }
+        
+        /* Divisor */
+        hr {
+            border-color: #3e445b;
+            margin: 25px 0;
+        }
+
+        /* ======================================= */
+        /* 3. Controles de Cámara (Integrado en el diseño) */
+        /* ======================================= */
+        .camera-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 30px; 
+            /* Se pone justo debajo del panel de control para orden */
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            background: none;
+            width: 320px; 
+            /* Para que no se superponga con el panel principal, si tiene su propio fondo */
+        }
+        .camera-controls h3 {
+             color: #a0a0a0;
+             margin: 0 0 15px 0;
+             font-size: 0.9em;
+             font-weight: 500;
+             text-align: center;
+        }
+        .camera-controls button {
+            background-color: #2b3238; /* Color de fondo del selector */
+            color: #dcdcdc; 
+            border: 1px solid #3e445b;
+            padding: 10px 18px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1.5em; 
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .camera-controls button:hover {
+            background-color: #e88d10; /* Hover Naranja Quemado */
+            color: #1f2427;
+        }
+        .camera-controls .horizontal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .camera-controls .horizontal-buttons button {
+            width: auto;
+            padding: 10px 25px;
+            font-size: 1.2em;
+        }
+        /* Botón de Centrar */
+        #center {
+            background-color: #e88d10;
+            color: #1f2427;
+            font-size: 1em;
+            font-weight: 700;
+            border-color: #e88d10;
+        }
+        #center:hover {
+            background-color: #ff9900;
+            color: #1f2427;
+        }
+
+
+        /* ======================================= */
+        /* 4. Mensaje de estado (Franja AMARILLA/NARANJA - Alerta) */
+        /* ======================================= */
+        .status-message {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background-color: #000; 
+            color: #ff9900; 
+            border-top: 5px solid #ff9900; 
+            border-bottom: 5px solid #ff9900; 
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(255, 153, 0, 0.9); 
+            z-index: 1000;
+            padding: 25px 60px; font-size: 3em; text-align: center;
+            box-shadow: 0 0 20px rgba(255, 153, 0, 0.6); border-radius: 0; width: 80%; max-width: 800px;
+            display: none;
+        }
+        
+        /* Botones del mensaje de estado */
+        .button-container {
+            margin-top: 25px;
+        }
+        .button-container button {
+            padding: 12px 25px;
+            font-size: 1em; 
+            font-weight: 700;
+            background-color: #3e445b; 
+            color: #dcdcdc;
+            border: none;
+            border-radius: 8px;
+        }
+        .button-container button:hover {
+            background-color: #e88d10;
+            color: #1f2427;
+        }
+        
+        /* Selector de Idioma (Más discreto) */
+        .language-select-container {
+            position: absolute;
+            top: 30px;
+            right: 400px; /* Separado del panel de resultados */
+            z-index: 10;
+            background-color: #1f2427; 
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .language-select-container label {
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+        #language {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #3e445b;
+            background-color: #2b3238;
+            color: #fff;
+            font-size: 0.9em;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <canvas id="simulacionCanvas"></canvas> 
+    
+    <audio id="bgMusic" loop src="audioInicio.mp3"></audio>
+    <audio id="audioImpacto" src="audioimpacto2.mp3"></audio>
+
+    <div class="language-select-container">
+        <label for="language">Idioma:</label>
+        <select id="language">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
+    <div class="custom-gui">
+        <h2>Ajusta los parámetros</h2>
+
+        <div class="control-group">
+            <label for="asteroid-select">Cargar datos de un asteroide real (NASA):</label>
+            <select id="asteroid-select">
+                <option value="">Selecciona un asteroide</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="diametro-slider">Diámetro (m): <span id="diametro-value">100 m</span></label>
+            <input type="range" id="diametro-slider" min="1" max="5000" step="1" value="100">
+        </div>
+        
+        <div class="control-group">
+            <label for="velocidad-slider">Velocidad (km/s): <span id="velocidad-value">20 km/s</span></label>
+            <input type="range" id="velocidad-slider" min="1" max="70" step="0.5" value="20">
+        </div>
+        
+        <div class="control-group">
+            <label for="densidad-slider">Densidad (kg/m³): <span id="densidad-value">3000 kg/m³</span></label>
+            <input type="range" id="densidad-slider" min="1000" max="8000" step="100" value="3000">
+        </div>
+
+        <button id="startBtn">Simular Impacto</button>
+        <button id="deflectBtn">Activar Desviación</button>
+    </div>
+
+    <div class="impact-results-panel">
+        <div class="panel-header">Resultados del Impacto</div>
+        
+        <div class="result-item">Diámetro: <strong id="res-diametro">100.0 m</strong></div>
+        <div class="result-item">Velocidad: <strong id="res-velocidad">20.00 km/s</strong></div>
+        <div class="result-item">Densidad: <strong id="res-densidad">3000.0 kg/m³</strong></div>
+        
+        <hr>
+
+        <div class="result-item">Energía: <strong id="res-energia">--- J</strong></div>
+        <div class="result-item">Equivalente TNT: <strong id="res-tnt">--- toneladas</strong></div>
+        <div class="result-item">Tamaño estimado del cráter: <strong id="res-crater">--- m</strong></div>
+        <div class="result-item">Magnitud sísmica aproximada: <strong id="res-sismica">M ---</strong></div>
+
+        <div class="sugerencias" id="res-sugerencias">
+            </div>
+    </div>
+    
+    <div id="statusMessage" class="status-message">
+        SIMULACIÓN TERMINADA
+        
+        <div class="button-container">
+            <button id="viewCraterBtn">Ver Cráter</button>
+            <button id="learnMoreBtn">Aprender más...</button>
+        </div>
+    </div>
+
+    <div class="camera-controls">
+        <h3>CONTROLES DE VISTA</h3>
+        <button id="up" title="Mover la cámara hacia arriba">&#9650;</button>
+        <div class="horizontal-buttons">
+            <button id="left" title="Mover la cámara a la izquierda">&#9664;</button>
+            <button id="center" title="Centrar la cámara">HOME</button>
+            <button id="right" title="Mover la cámara a la derecha">&#9654;</button>
+        </div>
+        <button id="down" title="Mover la cámara hacia abajo">&#9660;</button>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

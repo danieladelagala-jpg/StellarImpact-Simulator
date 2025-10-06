@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende Más... - Resultados del Impacto</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0d1a26; /* Fondo azul oscuro/espacio */
+            color: #e6f7ff; /* Texto blanco azulado */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background-color: #1a2c3e; /* Contenedor más claro */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+            border: 1px solid #0096ff;
+        }
+
+        h1 {
+            color: #00e0ff; /* Titulo azul brillante */
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00e0ff;
+            padding-bottom: 10px;
+        }
+
+        .section-header {
+            color: #f7b300; /* Naranja/Amarillo para secciones */
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .data-card {
+            background-color: #213a52; /* Fondo de la tarjeta */
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #0096ff;
+        }
+
+        .data-card .label {
+            font-size: 0.9em;
+            color: #a3c2ff;
+            margin-bottom: 5px;
+        }
+
+        .data-card .value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        /* Contenedor de Sugerencias */
+        #sugerencias-globales {
+            background-color: #4b2a2a; /* Fondo rojo oscuro para alerta */
+            border: 2px solid #ff4500;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        #sugerencias-globales h3 {
+            color: #ff4500;
+        }
+        
+        /* Estilos para la nueva sección de videos */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .video-item {
+            width: 100%;
+            aspect-ratio: 16 / 9; /* Mantener relación de aspecto de video */
+            border: 3px solid #00e0ff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-item iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Botón de volver */
+        .back-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto 0;
+            padding: 10px;
+            text-align: center;
+            background-color: #0096ff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-button">← Volver a la Simulación</a>
+
+    <div class="container">
+        <h1>Resultados Detallados del Impacto Meteorítico</h1>
+
+        <h2 class="section-header">1. Parámetros del Objeto</h2>
+        <div class="data-grid">
+            <div class="data-card">
+                <div class="label">Diámetro (m)</div>
+                <div class="value" id="res-diametro">---</div>
+            </div>
+            <div class="data-card">
+                <div class="label">Velocidad de Impacto (km/s)</div>
+                <div class="value" id="res-velocidad">---</div>
+            </div>
+            <div class="data-card">
+                <div class="label">Densidad (kg/m³)</div>
+                <div class="value" id="res-densidad">---</div>
+            </div>
+        </div>
+
+        <h2 class="section-header">2. Consecuencias del Impacto</h2>
+        <div class="data-grid">
+            <div class="data-card">
+                <div class="label">Energía Cinética Liberada</div>
+                <div class="value" id="res-energia">--- J</div>
+            </div>
+            <div class="data-card">
+                <div class="label">Equivalente TNT</div>
+                <div class="value" id="res-tnt">---</div>
+            </div>
+            <div class="data-card">
+                <div class="label">Diámetro del Cráter Estimado</div>
+                <div class="value" id="res-crater">--- km</div>
+            </div>
+            <div class="data-card">
+                <div class="label">Magnitud Sísmica Aproximada</div>
+                <div class="value" id="res-sismica">M ---</div>
+            </div>
+        </div>
+
+        <h2 class="section-header">3. Recomendaciones y Mitigación</h2>
+        <div id="sugerencias-globales">
+            <h3>Cargando sugerencias...</h3>
+        </div>
+
+        <h2 class="section-header">4. Videos y Recursos Adicionales</h2>
+        <div class="video-grid">
+            
+            <div class="video-item">
+                <iframe 
+                    src="https://www.youtube.com/embed/O4QrnC9vLs8" 
+                    title="Vídeo de YouTube: El Impacto de Chicxulub" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div class="video-item">
+                <iframe 
+                    src="https://www.youtube.com/embed/HBFfBz0n_SE" 
+                    title="Vídeo de YouTube: DART Misión de Desvío" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div class="video-item">
+                <iframe 
+                    src="https://www.youtube.com/embed/7_sVAcX-ueE" 
+                    title="Vídeo de YouTube: Qué sucede si un asteroide golpea la Tierra" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+        </div>
+        </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = JSON.parse(localStorage.getItem('impactData'));
+
+            if (data) {
+                document.getElementById('res-diametro').textContent = data.diametro;
+                document.getElementById('res-velocidad').textContent = data.velocidad;
+                document.getElementById('res-densidad').textContent = data.densidad;
+                
+                document.getElementById('res-energia').textContent = data.energia;
+                document.getElementById('res-tnt').textContent = data.tnt;
+                document.getElementById('res-crater').textContent = data.crater;
+                document.getElementById('res-sismica').textContent = data.sismica;
+
+                // Inyectar el HTML completo de las sugerencias
+                document.getElementById('sugerencias-globales').innerHTML = data.sugerenciasHtml;
+                
+            } else {
+                // Si no hay datos, mostrar mensaje de error
+                document.getElementById('sugerencias-globales').innerHTML = "<h3>Error: No se encontraron datos de la última simulación. Por favor, realiza una simulación primero.</h3>";
+            }
+        });
+    </script>
+</body>
+</html>
